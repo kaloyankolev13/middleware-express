@@ -4,6 +4,9 @@ const app = express();
 
 morgan('tiny');
 app.use(morgan('tiny'));
+app.use((req, res) => {
+  res.send('Hello world');
+});
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
