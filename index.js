@@ -3,11 +3,11 @@ const morgan = require('morgan');
 const app = express();
 
 // app.use(morgan('dev'));
-// app.use((req, res, next) => {
-//   req.requestTime = Date.now();
-//   req.method = 'GET'; // change the method to GET for every request
-//   next();
-// });
+app.use((req, res, next) => {
+  req.requestTime = Date.now();
+  req.method = 'GET'; // change the method to GET for every request
+  next();
+});
 
 app.use('/dogs', (req, res, next) => {
   console.log('I love dogs!');
@@ -20,7 +20,8 @@ const verifyPassword = (req, res, next) => {
   if (password === 'chickennugget') {
     next();
   } else {
-    res.send('Sorry you need a password!');
+    // res.send('Sorry you need a password!');
+    throw new Error('Password required');
   }
 };
 
@@ -49,8 +50,25 @@ app.get('/dog', (req, res) => {
   res.send('Woof!');
 });
 
+app.get('/error', (req, res) => {
+  chicken.fly();
+});
+
 app.use((req, res) => {
   res.status(404).send('Not Found');
+});
+
+// app.use((err, req, res, next) => {
+//   console.log('**********************************');
+//   console.log('***************ERROR**************');
+//   console.log('**********************************');
+//   res.status(500).send('Something broke!');
+// });
+app.use((err, req, res, next) => {
+  console.log('**********************************');
+  console.log('***************ERROR**************');
+  console.log('**********************************');
+  next(err);
 });
 
 app.listen(3000, () => {
